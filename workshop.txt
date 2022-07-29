@@ -1,6 +1,7 @@
 version=1
+id=2842179206
 title=Night Vision Chucked
-description=A patch/API to eris' Night Vision mod (fixing a few features).
+description=[h2]A patch/API to eris' Night Vision mod (fixing a few features).[/h2]
 description=
 description=[img]https://i.imgur.com/p7Fv1Z6.gif[/img]
 description=
@@ -11,8 +12,9 @@ description=[url=https://steamcommunity.com/sharedfiles/filedetails/?id=25303890
 description=[i](*Note: There will be errors, however, these are unavoidable until PawLow removes his copy of eris' mod from inside PLL.)[/i]
 description=
 description=
-description=[h2][b]Guide On API: [url=https://github.com/ChuckTheSheep/Night-Vision-Chucked/blob/main/contents/mods/Night%20Vision%20Chucked/media/lua/client/crossModCompat.lua]Click Here[/url][/h2][/b]
+description=[h3][b]Guide On API:[/b] [url=https://github.com/ChuckTheSheep/Night-Vision-Chucked/blob/main/contents/mods/Night%20Vision%20Chucked/media/lua/client/crossModCompat.lua]Click Here[/url][/h3]
 description=
 description=
 description=[url=https://ko-fi.com/chuckleberryfinn][img]https://i.imgur.com/GxZ38nz.png[/img] [b]Consider supporting Chuck![/b][/url] [url=https://www.patreon.com/bePatron?u=17239488][img]https://raw.githubusercontent.com/ChuckTheSheep/Vanilla-Weapons-Expanded/main/Contents/mods/VanillaWeaponsExpanded/patreon/Patreon%20Logo.png[/img][/url]
+tags=Build 41;Clothing/Armor;Framework;Military
 visibility=public
