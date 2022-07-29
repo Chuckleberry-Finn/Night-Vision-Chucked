@@ -1,0 +1,18 @@
+version=1
+title=Night Vision Chucked
+description=A patch/API to eris' Night Vision mod (fixing a few features).
+description=
+description=[img]https://i.imgur.com/p7Fv1Z6.gif[/img]
+description=
+description=[h3][b]Already Supporting:[/b]
+description=[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2530389024]Shark's (and Peach's) Military Uniform Improvements[/url]
+description=[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2460154811]Brita's Armor Pack[/url]
+description=[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2530389024]Paw Low Loot (41.50)[/url]*[/h3]
+description=[i](*Note: There will be errors, however, these are unavoidable until PawLow removes his copy of eris' mod from inside PLL.)[/i]
+description=
+description=
+description=[h2][b]Guide On API: [url=https://github.com/ChuckTheSheep/Night-Vision-Chucked/blob/main/contents/mods/Night%20Vision%20Chucked/media/lua/client/crossModCompat.lua]Click Here[/url][/h2][/b]
+description=
+description=
+description=[url=https://ko-fi.com/chuckleberryfinn][img]https://i.imgur.com/GxZ38nz.png[/img] [b]Consider supporting Chuck![/b][/url] [url=https://www.patreon.com/bePatron?u=17239488][img]https://raw.githubusercontent.com/ChuckTheSheep/Vanilla-Weapons-Expanded/main/Contents/mods/VanillaWeaponsExpanded/patreon/Patreon%20Logo.png[/img][/url]
+visibility=public
