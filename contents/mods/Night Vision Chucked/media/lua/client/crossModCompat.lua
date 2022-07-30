@@ -6,6 +6,7 @@
 --- This line is required to ensure proper loading regardless of the which method is selected:
 if getActivatedMods():contains("NightVisionChucked") then require("eris_nvg/eris_nvg/eris_nvg") else return end
 
+--- ALL ITEMS THAT ARE APPLIED NEED TO BE "CLOTHING" TYPE ITEMS.
 
 --- { SINGLE METHOD } Adds a single type at a time, similar to itemTweaker.
 -- This method is ideal if you don't have that many items or are not comfortable with Lua.
