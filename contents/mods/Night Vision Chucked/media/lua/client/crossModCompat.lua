@@ -35,9 +35,9 @@ module EXAMPLE_MODULE
 {
     item EXAMPLE_TYPE
     {
-        Type = Clothing, --REQUIRED--
-        Tags = NVGchucked, --REQUIRED--
-        -- Everything else can be what ever you want. --
+        Type = Clothing,
+        Tags = NVGchucked,
+        /* Type=Clothings, and Tags=NVGchucked are both required for the API to apply, everything else can be what ever you want. */
     }
 }
 --]] --SMUI (SMUI has elected to use the tags method in their own code base.)
