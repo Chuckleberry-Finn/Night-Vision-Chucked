@@ -1,7 +1,7 @@
 version=1
 id=2842179206
 title=Night Vision Chucked
-description=[h2]A patch/API to eris' Night Vision mod (fixing a few features).[/h2]
+description=[h2]A patch/API to eris' Night Vision mod.[/h2]
 description=
 description=[img]https://i.imgur.com/p7Fv1Z6.gif[/img]
 description=
