@@ -30,7 +30,7 @@ function eris_uiBattery:doActionMenu(_context)
 	local contextOption
 	local isActive = self:updateActiveState()
 	local isValid = self.isValid(self.target, self.plObj, self.itemObj)
-	if not isActive and self:hasBattery() and self:hasPower() then
+	if not isActive and self:hasBattery() and self:hasPower() and self.plObj:isEquippedClothing(self.itemObj) then
 		contextOption = _context:addOption(getTextOrNull("ContextMenu_Turn_On") or "Activate", self, eris_uiBattery.doAction, "Activate")
 	elseif isActive then
 		contextOption = _context:addOption(getTextOrNull("ContextMenu_Turn_Off") or "Deactivate", self, eris_uiBattery.doAction, "Deactivate")
