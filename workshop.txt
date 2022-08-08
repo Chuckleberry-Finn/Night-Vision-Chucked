@@ -8,7 +8,7 @@ description=
 description=[h3][b]Already Supporting:[/b]
 description=[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2530389024]Shark's (and Peach's) Military Uniform Improvements[/url]
 description=[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2460154811]Brita's Armor Pack[/url]
-description=[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2530389024]Paw Low Loot (41.50)[/url]*[/h3]
+description=[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2279084780]Paw Low Loot (41.50)[/url]*[/h3]
 description=[i](*Note: There will be errors, however, these are unavoidable until PawLow removes his copy of eris' mod from inside PLL.)[/i]
 description=
 description=
