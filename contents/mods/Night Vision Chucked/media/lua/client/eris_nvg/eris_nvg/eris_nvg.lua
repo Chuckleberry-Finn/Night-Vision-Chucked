@@ -8,7 +8,7 @@ local eris_nvg = {
 	numActiveNVG = 0,
 	activeNVG = {},
 	playerScreenBounds = {},
-	brightnessOverlay = nil--getTexture("media/textures/overlayBrightness.png"),
+	brightnessOverlay = getTexture("media/textures/overlayBrightness.png"),
 }
 
 
@@ -149,7 +149,7 @@ eris_nvg.initialiseNVG = function(_itemID, _plObj, _itemObj)
 		itemObj = _itemObj,
 		runtime = 6,
 		target = nil,
-		adjustablePower = false,
+		adjustablePower = true,
 		itemWeightNoBattery = 0.7,
 		itemWeightWithBattery = 1.2,
 		isValid = eris_nvg.isValid,

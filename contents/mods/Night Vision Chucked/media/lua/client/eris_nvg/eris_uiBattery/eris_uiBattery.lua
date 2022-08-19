@@ -64,7 +64,7 @@ end
 
 
 function eris_uiBattery:doPowerLevelMenu(_context)
-	--[[if self.adjustablePower then
+	if self.adjustablePower then
 		local powerLevel
 		local contextAdd = _context:addOption(getTextOrNull("IGUI_RadioPower") or "Power", self.itemObj)
 		local subcontextAdd = _context:getNew(_context)
@@ -77,7 +77,7 @@ function eris_uiBattery:doPowerLevelMenu(_context)
 				subcontextAdd:addOption((i * 10).."%", self, eris_uiBattery.doAction, "SetPowerLevel", nil, nil, nil, nil, powerLevel)
 			end
 		end
-	end--]]
+	end
 end
 
 
