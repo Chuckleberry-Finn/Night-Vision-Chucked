@@ -143,6 +143,40 @@ function ISClothingExtraAction:perform()
 end
 
 
+function eris_nvg.onKeyPressed(key)
+	local playerObj = getSpecificPlayer(0)
+	if not playerObj then
+		return
+	end
+
+	if key == getCore():getKey("Equip/Turn On/Off Light Source") then
+		local wornItems = playerObj:getWornItems()
+
+		for i=1,wornItems:size() do
+			local item = wornItems:getItemByIndex(i-1)
+			if item and appliedNVGChuckedTypes[item:getFullType()] and eris_nvg.isWearing(nil, playerObj, item) then
+
+				local itemID = eris_nvg.getItemID(item)
+				local itemBatteryManager = eris_nvg.batteryManagers[itemID]
+				if not itemBatteryManager then
+					eris_nvg.initialiseNVG(itemID, playerObj, item)
+					itemBatteryManager = eris_nvg.batteryManagers[itemID]
+				end
+
+				if itemBatteryManager then
+					if eris_nvg.isActive(nil, playerObj) then
+						itemBatteryManager:doAction("Deactivate")
+					elseif itemBatteryManager:hasBattery() and itemBatteryManager:hasPower() then
+						itemBatteryManager:doAction("Activate")
+					end
+				end
+			end
+		end
+	end
+end
+Events.OnKeyPressed.Add(eris_nvg.onKeyPressed)
+
+
 eris_nvg.initialiseNVG = function(_itemID, _plObj, _itemObj)
 	local nvgObj = {
 		plObj = _plObj,
