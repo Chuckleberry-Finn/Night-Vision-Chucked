@@ -170,20 +170,22 @@ function eris_uiBattery:update()
 		if batterylevel > 0 then
 			local worldTime = getGameTime():getWorldAgeHours()
 			local activeTime = self.itemObj:getModData()["uiBattery_activeTime"]
-			reductionThisFrame = powerLevel * ((worldTime - activeTime) / self.runtime)
-			batterylevel = batterylevel - reductionThisFrame
-			if batterylevel < 0 then batterylevel = 0 end
-			if batterylevel == 0 then 
-				self.itemObj:getModData()["uiBattery_active"] = false
-				self.onBatteryDead(self.target, self.plObj, self.itemObj, self)
+			if activeTime then
+				reductionThisFrame = powerLevel * ((worldTime - activeTime) / self.runtime)
+				batterylevel = batterylevel - reductionThisFrame
+				if batterylevel < 0 then batterylevel = 0 end
+				if batterylevel == 0 then
+					self.itemObj:getModData()["uiBattery_active"] = false
+					self.onBatteryDead(self.target, self.plObj, self.itemObj, self)
+				end
+				self.itemObj:getModData()["uiBattery_batteryLevel"] = batterylevel
+				self.itemObj:getModData()["uiBattery_activeTime"] = worldTime
+				-- print("activeTime " ..activeTime)
+				-- print("worldTime " ..worldTime)
+				-- print("powerLevel = "..powerLevel)
+				-- print("batterylevel = "..batterylevel)
+				-- print("reductionThisFrame = "..reductionThisFrame)
 			end
-			self.itemObj:getModData()["uiBattery_batteryLevel"] = batterylevel
-			self.itemObj:getModData()["uiBattery_activeTime"] = worldTime
-			-- print("activeTime " ..activeTime)
-			-- print("worldTime " ..worldTime)
-			-- print("powerLevel = "..powerLevel)
-			-- print("batterylevel = "..batterylevel)
-			-- print("reductionThisFrame = "..reductionThisFrame)
 		end
 	end
 	triggerEvent("UI_Update")
