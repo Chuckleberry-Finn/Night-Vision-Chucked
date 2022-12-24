@@ -17,13 +17,21 @@ applyNVGchucked_ModuleType("Base.Mask_HECU") --PAW LOW LOOT:
 --- { BATCH METHOD } Adds multiple types through a provided lua table, otherwise the same as above.
 -- This method is ideal if you have a lot of items (probably a rare instance.)
 for _,type in pairs({
-    "Base.Hat_PVS_5",
-    "Base.Hat_PVS15",
-    "Base.Hat_Sam_NV",
+
     "Base.Hat_PVS15_ON",
     "Base.Hat_PVS15_Harness_ON",
+
+    "Base.Hat_Sam_NV",
+
     "Base.Hat_NV18_ON",
     "Base.Hat_NV18_Harness_ON",
+
+    "Base.NV_PVS5",
+    "Base.NV_PNV_57",
+    "Base.NV_PVS7",
+    "Base.NV_PVS21",
+
+
 }) do applyNVGchucked_ModuleType(type) end --BRITA
 
 
