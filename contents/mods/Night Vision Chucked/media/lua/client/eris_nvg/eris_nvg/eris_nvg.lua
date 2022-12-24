@@ -37,11 +37,7 @@ local function getNVGTypes()
 
 		if itemScript and tostring(itemScript:getType()) == "Clothing" then
 
-			if itemScriptModuleDotType=="nvgoggles" or itemScriptModuleDotType=="nvgoggles41" then
-				itemScript:DoParam("DisplayCategory = Helmet")
-			end
-
-			if itemScript:getTags() and itemScript:getTags():contains("NVGchucked") then
+			if itemScript:getTags() and (itemScript:getTags():contains("NVGchucked") or itemScript:getTags():contains("NVITEM")) then
 				appliedNVGChuckedTypes[itemScriptModuleDotType] = true
 			end
 		else
