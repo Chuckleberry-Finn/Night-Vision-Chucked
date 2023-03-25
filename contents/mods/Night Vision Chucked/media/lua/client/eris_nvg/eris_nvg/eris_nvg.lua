@@ -12,7 +12,7 @@ local eris_nvg = {
 }
 
 
-eris_nvg.doCheck = function(_plObj)
+function eris_nvg.doCheck(_plObj)
 	for itemID, batteryManager in pairs(eris_nvg.batteryManagers) do
 		batteryManager:update()
 	end
@@ -51,7 +51,7 @@ end
 Events.OnGameStart.Add(getNVGTypes)
 
 
-eris_nvg.doMenu = function(_plID, _context, _items)
+function eris_nvg.doMenu(_plID, _context, _items)
 	local isWearing
 	local itemObj
 	local itemID
@@ -72,23 +72,23 @@ eris_nvg.doMenu = function(_plID, _context, _items)
 end
 
 
-eris_nvg.isActive = function(_, _plObj, _itemObj)
+function eris_nvg.isActive(_, _plObj, _itemObj)
 	return _plObj:isWearingNightVisionGoggles() or false
 end
 
 
-eris_nvg.isWearing = function(_, _plObj, _itemObj)
+function eris_nvg.isWearing(_, _plObj, _itemObj)
 	return _itemObj:getBodyLocation() or false
 	--return _plObj:getClothingItem_Head() == _itemObj or false
 end
 
 
-eris_nvg.isInPlayerInventory = function(_, _plObj, _itemObj)
+function eris_nvg.isInPlayerInventory(_, _plObj, _itemObj)
 	return _itemObj:getContainer() == _plObj:getInventory() or false
 end
 
 
-eris_nvg.isValid = function(_, _plObj, _itemObj)
+function eris_nvg.isValid(_, _plObj, _itemObj)
 	if _plObj and _itemObj then
 		return eris_nvg.isWearing(_, _plObj, _itemObj) or false
 	else
@@ -98,7 +98,7 @@ eris_nvg.isValid = function(_, _plObj, _itemObj)
 end
 
 
-eris_nvg.onActivate = function(_, _plObj, _itemObj, _manager)
+function eris_nvg.onActivate(_, _plObj, _itemObj, _manager)
 	_plObj:setWearingNightVisionGoggles(true)
 	eris_nvg.activeNVG[_plObj:getDisplayName() .. _plObj:getPlayerNum()] = _manager
 	eris_nvg.numActiveNVG = eris_nvg.numActiveNVG + 1
@@ -107,19 +107,22 @@ eris_nvg.onActivate = function(_, _plObj, _itemObj, _manager)
 end
 
 
-eris_nvg.onBatteryDead = function(_, _plObj, _itemObj, _manager)
+function eris_nvg.onBatteryDead(_, _plObj, _itemObj, _manager)
 	eris_nvg.onDeactivate(_, _plObj, _itemObj, _manager)
 	-- eris_nvg.batteryManagers[_itemObj:getType() .. _itemObj:getID()] = nil
 end
 
 
-eris_nvg.onDeactivate = function(_, _plObj, _itemObj, _manager)
+function eris_nvg.onDeactivate(_, _plObj, _itemObj, _manager)
+	eris_nvg.numActiveNVG = eris_nvg.numActiveNVG-1
+	if eris_nvg.numActiveNVG < 0 then eris_nvg.numActiveNVG = 0 end
+	if eris_nvg.numActiveNVG > 0 then return end
 	_plObj:setWearingNightVisionGoggles(false)
 	eris_nvg.activeNVG[_plObj:getDisplayName() .. _plObj:getPlayerNum()] = nil
-	eris_nvg.numActiveNVG = eris_nvg.numActiveNVG - 1 if eris_nvg.numActiveNVG < 0 then eris_nvg.numActiveNVG = 0 end
 	eris_nvg.updateScreenBounds()
 	Events.OnPreUIDraw.Remove(eris_nvg.doBrightnessOverlay)
 end
+
 
 local ISUnequipAction_perform = ISUnequipAction.perform
 function ISUnequipAction:perform()
@@ -173,7 +176,38 @@ end
 Events.OnKeyPressed.Add(eris_nvg.onKeyPressed)
 
 
-eris_nvg.initialiseNVG = function(_itemID, _plObj, _itemObj)
+---@param player IsoPlayer|IsoGameCharacter
+function eris_nvg.aimingWithNVGScope(player)
+	if not player then return end
+
+	---@type HandWeapon|ISReloadableWeapon
+	local weapon = player:getPrimaryHandItem()
+	if weapon and weapon:getCategory() == "Weapon" and weapon:isRanged() then
+
+		local attachment = weapon:getScope()
+		if attachment and appliedNVGChuckedTypes[attachment:getFullType()] then
+
+			local itemID = eris_nvg.getItemID(attachment)
+			local itemBatteryManager = eris_nvg.batteryManagers[itemID]
+			if not itemBatteryManager then
+				eris_nvg.initialiseNVG(itemID, player, attachment)
+				itemBatteryManager = eris_nvg.batteryManagers[itemID]
+			end
+
+			if itemBatteryManager and player:isAimKeyDown() then
+				eris_nvg.onActivate(nil, player, attachment, itemBatteryManager)
+			else
+				if eris_nvg.isActive(nil, player) then
+					eris_nvg.onDeactivate(nil, player)
+				end
+			end
+		end
+	end
+end
+Events.OnPlayerUpdate.Add(eris_nvg.aimingWithNVGScope)
+
+
+function eris_nvg.initialiseNVG(_itemID, _plObj, _itemObj)
 	local nvgObj = {
 		plObj = _plObj,
 		itemObj = _itemObj,
@@ -193,12 +227,12 @@ eris_nvg.initialiseNVG = function(_itemID, _plObj, _itemObj)
 end
 
 
-eris_nvg.getItemID = function(_itemObj)
+function eris_nvg.getItemID(_itemObj)
 	return _itemObj:getType() .. _itemObj:getID()
 end
 
-	-- eris_nvg.initInvInfo()
-eris_nvg.initInvInfo = function()
+
+function eris_nvg.initInvInfo()
 	local nvBar
 	for i, item in ipairs(appliedNVGChuckedTypes) do
 		nvBar = {
@@ -213,7 +247,7 @@ eris_nvg.initInvInfo = function()
 end
 
 
-eris_nvg.init = function()
+function eris_nvg.init()
 	eris_nvg.updateScreenBounds()
 	Events.OnClothingUpdated.Add(eris_nvg.doCheck)
 	Events.OnFillInventoryObjectContextMenu.Add(eris_nvg.doMenu)
@@ -225,12 +259,10 @@ eris_nvg.init = function()
 
 	eris_nvg.initInvInfo()
 end
-
-
 Events.OnGameStart.Add(eris_nvg.init)
 
 
-eris_nvg.doBrightnessOverlay = function()
+function eris_nvg.doBrightnessOverlay()
 	local nvgItem
 	local bounds, powerLevel
 	for plID, manager in pairs(eris_nvg.activeNVG) do
@@ -245,7 +277,7 @@ eris_nvg.doBrightnessOverlay = function()
 end
 
 
-eris_nvg.updateScreenBounds = function()
+function eris_nvg.updateScreenBounds()
 	local plID
 	local player, playerNum
 	local x, y, w, h
@@ -270,7 +302,5 @@ eris_nvg.updateScreenBounds = function()
 		end
 	end
 end
-
-
 Events.OnCreatePlayer.Add(eris_nvg.updateScreenBounds)
 Events.OnResolutionChange.Add(eris_nvg.updateScreenBounds)
