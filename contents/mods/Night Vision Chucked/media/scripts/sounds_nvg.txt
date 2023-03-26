@@ -1,0 +1,8 @@
+module Base {
+
+    sound nvgTurnedOn {
+        category = NVGchucked, loop = false, is3D = true,
+        clip { file = media/sound/nvgChuckedOn.ogg, distanceMax = 10, reverbFactor = 0.1, volume = 0.33, }
+        }
+
+}

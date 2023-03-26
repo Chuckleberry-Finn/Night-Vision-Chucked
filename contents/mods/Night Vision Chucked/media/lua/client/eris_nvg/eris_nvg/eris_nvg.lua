@@ -35,16 +35,16 @@ local function getNVGTypes()
 		local itemScript = allItems:get(i)
 		local itemScriptModuleDotType = itemScript:getFullName()
 
-		if itemScript and tostring(itemScript:getType()) == "Clothing" then
+		if itemScript then--and tostring(itemScript:getType()) == "Clothing" then
 
 			if itemScript:getTags() and (itemScript:getTags():contains("NVGchucked") or itemScript:getTags():contains("NVITEM")) then
 				appliedNVGChuckedTypes[itemScriptModuleDotType] = true
 			end
-		else
-			if appliedNVGChuckedTypes[itemScriptModuleDotType] == true then
-				print("WARNING: nightVisionChucked: \""..itemScriptModuleDotType.."\" not clothing; removed from applied types.")
-				appliedNVGChuckedTypes[itemScriptModuleDotType] = nil
-			end
+		--else
+		--	if appliedNVGChuckedTypes[itemScriptModuleDotType] == true then
+		--		print("WARNING: nightVisionChucked: \""..itemScriptModuleDotType.."\" not clothing; removed from applied types.")
+		--		appliedNVGChuckedTypes[itemScriptModuleDotType] = nil
+		--	end
 		end
 	end
 end
@@ -99,10 +99,12 @@ end
 
 
 function eris_nvg.onActivate(_, _plObj, _itemObj, _manager)
-	_plObj:setWearingNightVisionGoggles(true)
-	eris_nvg.activeNVG[_plObj:getDisplayName() .. _plObj:getPlayerNum()] = _manager
+	if eris_nvg.activeNVG[_itemObj:getDisplayName() .. _plObj:getPlayerNum()] then return end
 	eris_nvg.numActiveNVG = eris_nvg.numActiveNVG + 1
+	_plObj:getEmitter():playSound("nvgTurnedOn")
 	eris_nvg.updateScreenBounds()
+	_plObj:setWearingNightVisionGoggles(true)
+	eris_nvg.activeNVG[_itemObj:getDisplayName() .. _plObj:getPlayerNum()] = _manager
 	Events.OnPreUIDraw.Add(eris_nvg.doBrightnessOverlay)
 end
 
@@ -114,11 +116,12 @@ end
 
 
 function eris_nvg.onDeactivate(_, _plObj, _itemObj, _manager)
+	if not eris_nvg.activeNVG[_itemObj:getDisplayName() .. _plObj:getPlayerNum()] then return end
 	eris_nvg.numActiveNVG = eris_nvg.numActiveNVG-1
+	eris_nvg.activeNVG[_itemObj:getDisplayName() .. _plObj:getPlayerNum()] = nil
 	if eris_nvg.numActiveNVG < 0 then eris_nvg.numActiveNVG = 0 end
 	if eris_nvg.numActiveNVG > 0 then return end
 	_plObj:setWearingNightVisionGoggles(false)
-	eris_nvg.activeNVG[_plObj:getDisplayName() .. _plObj:getPlayerNum()] = nil
 	eris_nvg.updateScreenBounds()
 	Events.OnPreUIDraw.Remove(eris_nvg.doBrightnessOverlay)
 end
@@ -194,12 +197,10 @@ function eris_nvg.aimingWithNVGScope(player)
 				itemBatteryManager = eris_nvg.batteryManagers[itemID]
 			end
 
-			if itemBatteryManager and player:isAimKeyDown() then
+			if itemBatteryManager and player:isAiming() then
 				eris_nvg.onActivate(nil, player, attachment, itemBatteryManager)
 			else
-				if eris_nvg.isActive(nil, player) then
-					eris_nvg.onDeactivate(nil, player)
-				end
+				eris_nvg.onDeactivate(nil, player, attachment, itemBatteryManager)
 			end
 		end
 	end
