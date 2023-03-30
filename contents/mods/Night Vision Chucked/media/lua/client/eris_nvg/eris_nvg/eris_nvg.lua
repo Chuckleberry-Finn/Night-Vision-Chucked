@@ -131,7 +131,7 @@ local ISUnequipAction_perform = ISUnequipAction.perform
 function ISUnequipAction:perform()
 	--self.item:
 	if self.item and appliedNVGChuckedTypes[self.item:getFullType()] and eris_nvg.isActive(nil, self.character) then
-		eris_nvg.onDeactivate(nil, self.character)
+		eris_nvg.onDeactivate(nil, self.character, self.item)
 	end
 	ISUnequipAction_perform(self)
 end
@@ -140,7 +140,7 @@ local ISClothingExtraAction_perform = ISClothingExtraAction.perform
 function ISClothingExtraAction:perform()
 	ISClothingExtraAction_perform(self)
 	if self.item and appliedNVGChuckedTypes[self.item:getFullType()] and eris_nvg.isActive(nil, self.character) then
-		eris_nvg.onDeactivate(nil, self.character)
+		eris_nvg.onDeactivate(nil, self.character, self.item)
 	end
 end
 
