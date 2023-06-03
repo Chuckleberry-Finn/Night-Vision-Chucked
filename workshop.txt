@@ -1,9 +1,10 @@
 version=1
 id=2842179206
 title=Night Vision Chucked
-description=[h2]A patch/API to eris' Night Vision mod.[/h2]
+description=[h3]A patch/API to eris' Night Vision mod.[/h3]
 description=
-description=[img]https://i.imgur.com/p7Fv1Z6.gif[/img]
+description=[url=https://ko-fi.com/chuckleberryfinn][img]https://raw.githubusercontent.com/ChuckTheSheep/chuckImages/main/kofi.png[/img][/url] [url=https://www.patreon.com/bePatron?u=17239488][img]https://raw.githubusercontent.com/ChuckTheSheep/chuckImages/main/patreon.png[/img][/url]
+description=
 description=
 description=[h3][b]Already Supporting:[/b]
 description=[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2530389024]Shark's (and Peach's) Military Uniform Improvements[/url]
@@ -15,6 +16,6 @@ description=
 description=[h3][b]Guide On API:[/b] [url=https://github.com/ChuckTheSheep/Night-Vision-Chucked/blob/main/contents/mods/Night%20Vision%20Chucked/media/lua/client/crossModCompat.lua]Click Here[/url][/h3]
 description=
 description=
-description=[url=https://ko-fi.com/chuckleberryfinn][img]https://i.imgur.com/GxZ38nz.png[/img] [b]Consider supporting Chuck![/b][/url] [url=https://www.patreon.com/bePatron?u=17239488][img]https://raw.githubusercontent.com/ChuckTheSheep/Vanilla-Weapons-Expanded/main/Contents/mods/VanillaWeaponsExpanded/patreon/Patreon%20Logo.png[/img][/url]
+description=[h3]Copyright 2023 Chuckleberry Finn. This item is not authorized for posting on Steam, except under the Steam account named Chuckleberry Finn.[/h3]
 tags=Build 41;Clothing/Armor;Framework;Military
 visibility=public
