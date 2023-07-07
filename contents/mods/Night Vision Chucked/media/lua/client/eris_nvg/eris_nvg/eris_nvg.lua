@@ -264,10 +264,11 @@ Events.OnGameStart.Add(eris_nvg.init)
 
 
 function eris_nvg.doBrightnessOverlay()
-	local nvgItem
+	--local nvgItem
 	local bounds, powerLevel
-	for plID, manager in pairs(eris_nvg.activeNVG) do
+	for _, manager in pairs(eris_nvg.activeNVG) do
 		if manager then
+			local plID = manager:getPlayer():getPlayerNum()
 			bounds = eris_nvg.playerScreenBounds[plID]
 			powerLevel = manager:getPowerLevel()
 			if bounds and powerLevel and eris_nvg.brightnessOverlay then
@@ -288,7 +289,7 @@ function eris_nvg.updateScreenBounds()
 			player = playerList:get(i)
 			if player then
 				playerNum = player:getPlayerNum()
-				plID = player:getDisplayName() .. playerNum
+				plID = playerNum
 				eris_nvg.playerScreenBounds[plID] = {
 					x = getPlayerScreenLeft(playerNum),
 					y = getPlayerScreenTop(playerNum),
