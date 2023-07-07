@@ -5,7 +5,6 @@ description=[h3]A patch/API to eris' Night Vision mod.[/h3]
 description=
 description=[url=https://ko-fi.com/chuckleberryfinn][img]https://raw.githubusercontent.com/ChuckTheSheep/chuckImages/main/kofi.png[/img][/url] [url=https://www.patreon.com/bePatron?u=17239488][img]https://raw.githubusercontent.com/ChuckTheSheep/chuckImages/main/patreon.png[/img][/url]
 description=
-description=
 description=[h3][b]Already Supporting:[/b]
 description=[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2530389024]Shark's (and Peach's) Military Uniform Improvements[/url]
 description=[url=https://steamcommunity.com/sharedfiles/filedetails/?id=2460154811]Brita's Armor Pack[/url]
@@ -14,6 +13,9 @@ description=[i](*Note: There will be errors, however, these are unavoidable unti
 description=
 description=
 description=[h3][b]Guide On API:[/b] [url=https://github.com/ChuckTheSheep/Night-Vision-Chucked/blob/main/contents/mods/Night%20Vision%20Chucked/media/lua/client/crossModCompat.lua]Click Here[/url][/h3]
+description=
+description=
+description=[url=https://discord.gg/SReMnbV4V7][img]https://raw.githubusercontent.com/Chuckleberry-Finn/chuckImages/main/PZmodCommBanner1.png[/img][/url]
 description=
 description=
 description=[h3]Copyright 2023 Chuckleberry Finn. This item is not authorized for posting on Steam, except under the Steam account named Chuckleberry Finn.[/h3]
