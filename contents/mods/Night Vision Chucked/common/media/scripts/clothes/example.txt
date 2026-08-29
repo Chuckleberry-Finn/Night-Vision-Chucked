@@ -1,0 +1,12 @@
+/*
+module EXAMPLE_MODULE
+{
+	item EXAMPLE_TYPE
+	{
+		ItemType = base:clothing, --REQUIRED--
+		Tags = NVGchucked:NVG, --REQUIRED--
+
+		-- Everything else can be what ever you want. --
+    }
+}
+*/

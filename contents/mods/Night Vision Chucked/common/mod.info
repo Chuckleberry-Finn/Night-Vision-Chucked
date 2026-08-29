@@ -1,0 +1,8 @@
+name=Night Vision Chucked
+poster=poster.png
+id=NightVisionChucked
+description=A continuation of eris' Night Vision mod; framework and API only.
+icon=icon.png
+author=Chuckleberry Finn
+require=ChuckleberryFinnAlertSystem,errorMagnifier,
+versionMin=42.20
