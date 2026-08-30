@@ -27,5 +27,5 @@ description=[b][i][h1] [/h1][/i][/b]
 description=
 description=[b]Credit to eris for the original nvg_mod.[/b]
 description=[h3]Copyright 2026 Chuckleberry Finn. This item is not authorized for posting on Steam, except under the Steam account named Chuckleberry Finn.[/h3]
-tags=Build 41;Clothing/Armor;Framework;Military
+tags=Build 41;Build 42;Clothing/Armor;Framework;Military
 visibility=public
