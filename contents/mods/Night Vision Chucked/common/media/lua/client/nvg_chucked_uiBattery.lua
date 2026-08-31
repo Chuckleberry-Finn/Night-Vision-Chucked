@@ -33,7 +33,7 @@ end
 
 function nightVisionChucked_uiBattery:doActionMenu(_context)
     local isActive = batteryManager.updateActiveState(self.itemObj, self.plObj)
-    if not isActive and batteryManager.hasBattery(self.itemObj) and batteryManager.hasPower(self.itemObj) and self.plObj:isEquippedClothing(self.itemObj) then
+    if not isActive and appliedNVGActivatableTypes[self.itemObj:getFullType()] and batteryManager.hasBattery(self.itemObj) and batteryManager.hasPower(self.itemObj) and self.plObj:isEquippedClothing(self.itemObj) then
         _context:addOption(getTextOrNull("ContextMenu_Turn_On") or "Activate", self, nightVisionChucked_uiBattery.doAction, "Activate")
     elseif isActive then
         _context:addOption(getTextOrNull("ContextMenu_Turn_Off") or "Deactivate", self, nightVisionChucked_uiBattery.doAction, "Deactivate")

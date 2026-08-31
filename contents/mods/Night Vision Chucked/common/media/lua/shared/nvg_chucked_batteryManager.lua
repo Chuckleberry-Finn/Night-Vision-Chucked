@@ -1,4 +1,5 @@
 local nvgCore = require "nvg_chucked_core.lua"
+local compat = require "nvg_chucked_crossModCompat.lua"
 
 local batteryManager = {}
 
@@ -121,7 +122,12 @@ function batteryManager.drainItem(itemObj)
     local worldTime = getGameTime():getWorldAgeHours()
     local activeTime = itemObj:getModData()["uiBattery_activeTime"] or worldTime
 
-    batteryLevel = batteryLevel - (powerLevel * ((worldTime - activeTime) / batteryManager.runtime))
+    local drainMultiplier = compat.getDeviceSpec(itemObj:getFullType()).batteryDrainMultiplier or 1
+    local lifeMultiplier = (SandboxVars.NightVisionChucked and SandboxVars.NightVisionChucked.BatteryLifeMultiplier) or 1
+    if lifeMultiplier < 0.01 then lifeMultiplier = 0.01 end
+    local effectiveRuntime = (batteryManager.runtime / drainMultiplier) * lifeMultiplier
+
+    batteryLevel = batteryLevel - (powerLevel * ((worldTime - activeTime) / effectiveRuntime))
     if batteryLevel < 0 then batteryLevel = 0 end
 
     itemObj:getModData()["uiBattery_batteryLevel"] = batteryLevel

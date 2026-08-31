@@ -4,9 +4,24 @@ link2 = Workshop = https://steamcommunity.com/id/Chuckleberry_Finn/myworkshopfil
 link3 = Github = https://steamcommunity.com/linkfilter/?u=https://github.com/Chuckleberry-Finn,
 [ ------ ]
 
-[ 8/28/26 ]
-B42.20 Compatibility:
+[ 8/30/26 - B42 ]
 - Fix: getNVGTypes tag check.
 - Fix: aimingWithNVGScope using getActiveSight.
 - Fix: clothing example script tag.
+[ ------ ]
+
+[ 9/1/26 - IsoLight Update ]
+The vanilla NVG effect is currently broken in B42, most likely due to the render engine, depth, light changes.
+As such The mod now uses a green overlay and a client-side light.
+I have also overhauled alot of the older systems, and added a few new features.
+
+Currently only the mod supported is TTAJ1bl4's Night Vision Googles
+
+- Add: Device options window (power toggle, drag-drop battery slot, power level slider)
+- New: Battery/item weight now derives from the item's own script weight plus the actual battery's weight
+- Add: Simple client-side IsoLightSource to get around the vanilla nvg effect's issues
+- Add: "Thermal" features, currently only the mod supported is TTAJ1bl4's GPNVG-18
+       Thermals appear as pink outlines to zombies/players
+- Added: Sandbox for Battery-life, and Thermals working on Zombies
+- Fix: Battery duplication
 [ ------ ]

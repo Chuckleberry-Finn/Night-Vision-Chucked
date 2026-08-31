@@ -4,9 +4,22 @@ module EXAMPLE_MODULE
 	item EXAMPLE_TYPE
 	{
 		ItemType = base:clothing, --REQUIRED--
-		Tags = NVGchucked:NVG, --REQUIRED--
+		Tags = NVGchucked:NVG, --REQUIRED-- (implies battery capability too)
 
 		-- Everything else can be what ever you want. --
+    }
+
+    -- For items with a non-activatable "stowed"/"up" variant (e.g. a flipped
+    -- visor) created via ClothingItemExtra: tag the active variant with
+    -- NVGchucked:NVG as above, and the stowed variant with NVGchucked:BATTERY
+    -- only, so it can still hold/manage a battery but cannot activate the
+    -- NVG effect. --
+    item EXAMPLE_TYPE_UP
+    {
+        ItemType = base:clothing, --REQUIRED--
+        Tags = NVGchucked:BATTERY, --REQUIRED--
+
+        -- Everything else can be what ever you want. --
     }
 }
 */

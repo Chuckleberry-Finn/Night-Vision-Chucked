@@ -1,0 +1,10 @@
+{
+    "Sandbox_LastStandTogether": "Last Stand Together",
+    "Sandbox_NightVisionChucked": "Night Vision Chucked",
+
+    "Sandbox_NightVisionChucked_ThermalOnZombies": "Thermal Detects Zombies",
+    "Sandbox_NightVisionChucked_ThermalOnZombies_tooltip": "If enabled, thermal-capable NVG devices will outline nearby zombies. Player detection is unaffected by this option.",
+
+    "Sandbox_NightVisionChucked_BatteryLifeMultiplier": "Battery Life Multiplier",
+    "Sandbox_NightVisionChucked_BatteryLifeMultiplier_tooltip": "Scales how long NVG batteries last. 1.0 is normal life, lower values make batteries drain faster."
+}

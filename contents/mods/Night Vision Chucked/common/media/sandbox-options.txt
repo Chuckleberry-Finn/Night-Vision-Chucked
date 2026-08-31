@@ -1,0 +1,19 @@
+VERSION = 1,
+
+option NightVisionChucked.ThermalOnZombies
+{
+    type = boolean,
+    default = true,
+    page = NightVisionChucked,
+    translation = NightVisionChucked_ThermalOnZombies,
+}
+
+option NightVisionChucked.BatteryLifeMultiplier
+{
+    type = double,
+    min = 0.0,
+    max = 1.0,
+    default = 1.0,
+    page = NightVisionChucked,
+    translation = NightVisionChucked_BatteryLifeMultiplier,
+}

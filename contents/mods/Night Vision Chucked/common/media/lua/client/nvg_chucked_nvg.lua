@@ -1,23 +1,52 @@
 require "TimedActions/ISUnequipAction"
+require "TimedActions/ISClothingExtraAction"
+require "TimedActions/ISWearClothing"
 require "nvg_chucked_deviceWindow.lua"
 
 local nvgCore = require "nvg_chucked_core.lua"
 local batteryManager = require "nvg_chucked_batteryManager.lua"
 local inventoryBar = require "nvg_chucked_inventoryBar.lua"
 local inventoryTooltip = require "nvg_chucked_inventoryTooltip.lua"
+local nvLight = require "nvg_chucked_light.lua"
+local thermal = require "nvg_chucked_thermal.lua"
+local compat = require "nvg_chucked_crossModCompat.lua"
 
 local nvg = {
     batteryManagers = {},
     numActiveNVG = 0,
     activeNVG = {},
     playerScreenBounds = {},
-    brightnessOverlay = getTexture("media/textures/overlayBrightness.png"),
+    greenOverlay = getTexture("media/textures/overlayGreen.png"),
 }
+
+
+function nvg.getActiveManager()
+    for _, manager in pairs(nvg.activeNVG) do
+        if manager then
+            return manager
+        end
+    end
+    return nil
+end
+
+
+function nvg.getActivePowerLevel()
+    local manager = nvg.getActiveManager()
+    return manager and (manager:getPowerLevel() or 1) or 1
+end
 
 
 function nvg.doCheck(_plObj)
     for itemID, batManager in pairs(nvg.batteryManagers) do
         batManager:reconcile()
+    end
+
+    if nvg.numActiveNVG > 0 then
+        local manager = nvg.getActiveManager()
+        local spec = manager and compat.getDeviceSpec(manager:getItem():getFullType()) or compat.deviceSpecDefault
+        nvLight.update(_plObj, nvg.getActivePowerLevel(), spec.lightRadius, spec.lightBrightness)
+        thermal.setEnabled(_plObj, spec.hasThermal)
+        thermal.scan(_plObj)
     end
 end
 
@@ -52,9 +81,11 @@ function nvg.onActivate(_, _plObj, _itemObj, _manager)
     nvg.numActiveNVG = nvg.numActiveNVG + 1
     _plObj:getEmitter():playSound("nvgTurnedOn")
     nvg.updateScreenBounds()
-    _plObj:setWearingNightVisionGoggles(true)
     nvg.activeNVG[_itemObj:getDisplayName() .. _plObj:getPlayerNum()] = _manager
-    Events.OnPreUIDraw.Add(nvg.doBrightnessOverlay)
+    Events.OnPreUIDraw.Add(nvg.doGreenOverlay)
+    local spec = compat.getDeviceSpec(_itemObj:getFullType())
+    nvLight.update(_plObj, _manager:getPowerLevel(), spec.lightRadius, spec.lightBrightness)
+    thermal.setEnabled(_plObj, spec.hasThermal)
 end
 
 
@@ -69,15 +100,17 @@ function nvg.onDeactivate(_, _plObj, _itemObj, _manager)
     nvg.activeNVG[_itemObj:getDisplayName() .. _plObj:getPlayerNum()] = nil
     if nvg.numActiveNVG < 0 then nvg.numActiveNVG = 0 end
     if nvg.numActiveNVG > 0 then return end
-    _plObj:setWearingNightVisionGoggles(false)
     nvg.updateScreenBounds()
-    Events.OnPreUIDraw.Remove(nvg.doBrightnessOverlay)
+    Events.OnPreUIDraw.Remove(nvg.doGreenOverlay)
+    nvLight.remove()
+    thermal.setEnabled(_plObj, false)
 end
 
 
 local ISUnequipAction_perform = ISUnequipAction.perform
 function ISUnequipAction:perform()
-    if self.item and appliedNVGChuckedTypes[self.item:getFullType()] and nvgCore.isActive(nil, self.character) then
+    if self.item and appliedNVGActivatableTypes[self.item:getFullType()] and nvgCore.isActive(nil, self.character) then
+        batteryManager.deactivate(self.item)
         nvg.onDeactivate(nil, self.character, self.item)
     end
     ISUnequipAction_perform(self)
@@ -86,9 +119,112 @@ end
 local ISClothingExtraAction_perform = ISClothingExtraAction.perform
 function ISClothingExtraAction:perform()
     ISClothingExtraAction_perform(self)
-    if self.item and appliedNVGChuckedTypes[self.item:getFullType()] and nvgCore.isActive(nil, self.character) then
+    if self.item and appliedNVGActivatableTypes[self.item:getFullType()] and nvgCore.isActive(nil, self.character) then
+        batteryManager.deactivate(self.item)
         nvg.onDeactivate(nil, self.character, self.item)
     end
+end
+
+local ISClothingExtraAction_complete = ISClothingExtraAction.complete
+function ISClothingExtraAction:complete()
+    local autoActivate = self.nvgAutoActivate
+    local oldItem = self.item
+    local playerNum = self.character:getPlayerNum()
+    local window = nightVisionChucked_deviceWindow.instances[playerNum]
+    local windowTrackingOldItem = window and window.itemObj == oldItem
+
+    ISClothingExtraAction_complete(self)
+
+    if not autoActivate and not windowTrackingOldItem then return end
+
+    local wornItems = self.character:getWornItems()
+    local activated = false
+    for i = 1, wornItems:size() do
+        local item = wornItems:getItemByIndex(i - 1)
+        if item and appliedNVGChuckedTypes[item:getFullType()] and nvgCore.isWearing(nil, self.character, item) then
+
+            if windowTrackingOldItem then
+                window:setItem(item)
+                windowTrackingOldItem = false
+            end
+
+            if autoActivate and not activated and appliedNVGActivatableTypes[item:getFullType()] then
+                activated = true
+                local itemID = nvgCore.getItemID(item)
+                if not nvg.batteryManagers[itemID] then nvg.initialiseNVG(itemID, self.character, item) end
+                local itemBatteryManager = nvg.batteryManagers[itemID]
+                if itemBatteryManager and batteryManager.hasBattery(item) and batteryManager.hasPower(item) then
+                    itemBatteryManager:doAction("Activate")
+                end
+            end
+        end
+    end
+end
+
+
+local ISWearClothing_complete = ISWearClothing.complete
+function ISWearClothing:complete()
+    local autoActivate = self.nvgAutoActivate
+    local item = self.item
+    local result = ISWearClothing_complete(self)
+
+    if autoActivate and result ~= false and item and appliedNVGChuckedTypes[item:getFullType()] then
+        if appliedNVGActivatableTypes[item:getFullType()] then
+            local itemID = nvgCore.getItemID(item)
+            if not nvg.batteryManagers[itemID] then nvg.initialiseNVG(itemID, self.character, item) end
+            local itemBatteryManager = nvg.batteryManagers[itemID]
+            if itemBatteryManager and batteryManager.hasBattery(item) and batteryManager.hasPower(item) then
+                itemBatteryManager:doAction("Activate")
+            end
+        else
+            nightVisionChucked_flipAndActivate(self.character, item)
+        end
+    end
+
+    return result
+end
+
+
+-- Equips a battery-capable NVG item straight from inventory and turns it on
+-- (flipping visor-up variants down first if needed) in one action. A bare
+-- global for the same circular-dependency reason as flipAndActivate - the
+-- device options window (a separate file) needs to call this too.
+function nightVisionChucked_wearAndActivate(plObj, item)
+    local action = ISWearClothing:new(plObj, item)
+    action.nvgAutoActivate = true
+    ISTimedActionQueue.add(action)
+end
+
+
+local function findActivatableExtra(item)
+    if not item:IsClothing() then return nil end
+    local extraList = item:getClothingItemExtra()
+    if not extraList then return nil end
+
+    local itemModule = item:getModule()
+    for i = 0, extraList:size() - 1 do
+        local moduleDotType = itemModule .. "." .. extraList:get(i)
+        if appliedNVGActivatableTypes[moduleDotType] then
+            return moduleDotType
+        end
+    end
+    return nil
+end
+
+
+-- Flips a battery-capable but non-activatable item (e.g. a visor-up variant)
+-- to its activatable counterpart and turns it on as soon as the flip
+-- completes. A bare global (not a method on the local nvg table) so both
+-- the F-key toggle here and the device options window (a separate file
+-- that can't require this one without a circular dependency) can call it.
+function nightVisionChucked_flipAndActivate(plObj, item)
+    local targetType = findActivatableExtra(item)
+    if not targetType then return false end
+
+    local action = ISClothingExtraAction:new(plObj, item, targetType)
+    action.nvgAutoActivate = true
+    ISTimedActionQueue.add(action)
+    return true
 end
 
 
@@ -103,21 +239,26 @@ function nvg.onKeyPressed(key)
 
         for i = 1, wornItems:size() do
             local item = wornItems:getItemByIndex(i - 1)
-            if item and appliedNVGChuckedTypes[item:getFullType()] and nvgCore.isWearing(nil, playerObj, item) then
+            if item and nvgCore.isWearing(nil, playerObj, item) then
 
-                local itemID = nvgCore.getItemID(item)
-                local itemBatteryManager = nvg.batteryManagers[itemID]
-                if not itemBatteryManager then
-                    nvg.initialiseNVG(itemID, playerObj, item)
-                    itemBatteryManager = nvg.batteryManagers[itemID]
-                end
-
-                if itemBatteryManager then
-                    if nvgCore.isActive(nil, playerObj) then
-                        itemBatteryManager:doAction("Deactivate")
-                    elseif batteryManager.hasBattery(item) and batteryManager.hasPower(item) then
-                        itemBatteryManager:doAction("Activate")
+                if appliedNVGActivatableTypes[item:getFullType()] then
+                    local itemID = nvgCore.getItemID(item)
+                    local itemBatteryManager = nvg.batteryManagers[itemID]
+                    if not itemBatteryManager then
+                        nvg.initialiseNVG(itemID, playerObj, item)
+                        itemBatteryManager = nvg.batteryManagers[itemID]
                     end
+
+                    if itemBatteryManager then
+                        if nvgCore.isActive(nil, playerObj) then
+                            itemBatteryManager:doAction("Deactivate")
+                        elseif batteryManager.hasBattery(item) and batteryManager.hasPower(item) then
+                            itemBatteryManager:doAction("Activate")
+                        end
+                    end
+
+                elseif appliedNVGChuckedTypes[item:getFullType()] then
+                    nightVisionChucked_flipAndActivate(playerObj, item)
                 end
             end
         end
@@ -135,7 +276,7 @@ function nvg.aimingWithNVGScope(player)
     if weapon and weapon:getCategory() == "Weapon" and weapon:isRanged() then
 
         local attachment = weapon:getActiveSight()
-        if attachment and appliedNVGChuckedTypes[attachment:getFullType()] then
+        if attachment and appliedNVGActivatableTypes[attachment:getFullType()] then
 
             local itemID = nvgCore.getItemID(attachment)
             if not nvg.batteryManagers[itemID] then
@@ -199,15 +340,21 @@ function nvg.init()
 end
 
 
-function nvg.doBrightnessOverlay()
+nvg.greenTintAlphaMin = 0.30
+nvg.greenTintAlphaMax = 0.45
+
+function nvg.doGreenOverlay()
     local bounds, powerLevel
     for _, manager in pairs(nvg.activeNVG) do
         if manager then
             local plID = manager:getPlayer():getPlayerNum()
             bounds = nvg.playerScreenBounds[plID]
             powerLevel = manager:getPowerLevel()
-            if bounds and powerLevel and nvg.brightnessOverlay then
-                UIManager.DrawTexture(nvg.brightnessOverlay, bounds.x, bounds.y, bounds.w, bounds.h, 1 - powerLevel)
+            if bounds and powerLevel then
+                if nvg.greenOverlay then
+                    local tintAlpha = nvg.greenTintAlphaMin + (nvg.greenTintAlphaMax - nvg.greenTintAlphaMin) * powerLevel
+                    UIManager.DrawTexture(nvg.greenOverlay, bounds.x, bounds.y, bounds.w, bounds.h, tintAlpha)
+                end
             end
         end
     end

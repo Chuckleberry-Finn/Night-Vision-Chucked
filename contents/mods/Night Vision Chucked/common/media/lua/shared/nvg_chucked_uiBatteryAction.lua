@@ -23,7 +23,8 @@ end
 
 
 function nightVisionChucked_uiBatteryAction:isValidActivate()
-    return nvgCore.isValid(nil, self.character, self.itemObj)
+    return appliedNVGActivatableTypes[self.itemObj:getFullType()]
+        and nvgCore.isValid(nil, self.character, self.itemObj)
         and not batteryManager.updateActiveState(self.itemObj, self.character)
         and (batteryManager.hasBattery(self.itemObj) and batteryManager.hasPower(self.itemObj)
             or batteryManager.hasAlternatePower(self.itemObj))

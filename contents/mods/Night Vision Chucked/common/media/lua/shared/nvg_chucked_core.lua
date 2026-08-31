@@ -1,9 +1,13 @@
 local nvgCore = {}
 
 appliedNVGChuckedTypes = appliedNVGChuckedTypes or {}
+appliedNVGActivatableTypes = appliedNVGActivatableTypes or {}
+
 function applyNVGchucked_ModuleType(moduleDotTypeString)
     appliedNVGChuckedTypes = appliedNVGChuckedTypes or {}
+    appliedNVGActivatableTypes = appliedNVGActivatableTypes or {}
     appliedNVGChuckedTypes[moduleDotTypeString] = true
+    appliedNVGActivatableTypes[moduleDotTypeString] = true
     print("MOD: nightVisionChucked: applying to: "..moduleDotTypeString)
 end
 
@@ -22,6 +26,9 @@ function nvgCore.getNVGTypes()
 
         if itemScript:hasTag(NIGHTVISION_CHUCKED_TAGS.NVG) then
             appliedNVGChuckedTypes[itemScriptModuleDotType] = true
+            appliedNVGActivatableTypes[itemScriptModuleDotType] = true
+        elseif itemScript:hasTag(NIGHTVISION_CHUCKED_TAGS.BATTERY) then
+            appliedNVGChuckedTypes[itemScriptModuleDotType] = true
         end
     end
 
@@ -35,7 +42,23 @@ end
 
 
 function nvgCore.isActive(_, plObj)
-    return plObj:isWearingNightVisionGoggles() or false
+    local wornItems = plObj:getWornItems()
+    for i = 1, wornItems:size() do
+        local item = wornItems:getItemByIndex(i - 1)
+        if item and appliedNVGChuckedTypes[item:getFullType()] and item:getModData()["uiBattery_active"] then
+            return true
+        end
+    end
+
+    local weapon = plObj:getPrimaryHandItem()
+    if weapon and weapon:getCategory() == "Weapon" and weapon:isRanged() then
+        local attachment = weapon:getActiveSight()
+        if attachment and appliedNVGChuckedTypes[attachment:getFullType()] and attachment:getModData()["uiBattery_active"] then
+            return true
+        end
+    end
+
+    return false
 end
 
 

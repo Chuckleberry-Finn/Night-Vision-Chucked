@@ -114,6 +114,17 @@ end
 
 function nightVisionChucked_deviceWindow:onToggle()
     if not self.itemObj then return end
+
+    if not nvgCore.isWearing(nil, self.player, self.itemObj) then
+        nightVisionChucked_wearAndActivate(self.player, self.itemObj)
+        return
+    end
+
+    if not appliedNVGActivatableTypes[self.itemObj:getFullType()] then
+        nightVisionChucked_flipAndActivate(self.player, self.itemObj)
+        return
+    end
+
     local isActive = batteryManager.updateActiveState(self.itemObj, self.player)
     self:doAction(isActive and "Deactivate" or "Activate")
 end
@@ -149,7 +160,7 @@ end
 function nightVisionChucked_deviceWindow:onPowerLevelChange(_newValue)
     if not self.itemObj then return end
     batteryManager.setPowerLevel(self.itemObj, _newValue / 100)
-    self:doAction("SetPowerLevel", nil, _newValue / 100)
+    self.pendingPowerLevelCommitMs = getTimestampMs() + 200
 end
 
 
@@ -157,7 +168,8 @@ function nightVisionChucked_deviceWindow:update()
     ISCollapsableWindow.update(self)
     if not self.itemObj then return end
 
-    if not nvgCore.isValid(nil, self.player, self.itemObj) then
+    local stillAccessible = nvgCore.isValid(nil, self.player, self.itemObj) or nvgCore.isInPlayerInventory(nil, self.player, self.itemObj)
+    if not stillAccessible then
         self:close()
         return
     end
@@ -175,7 +187,12 @@ function nightVisionChucked_deviceWindow:update()
     local batteryLevel = tonumber(self.itemObj:getModData()["uiBattery_batteryLevel"]) or 0
     self.batteryStatus:setPower(batteryLevel)
 
-    if not self.powerSlider.dragInside then
+    if self.pendingPowerLevelCommitMs and getTimestampMs() >= self.pendingPowerLevelCommitMs then
+        self.pendingPowerLevelCommitMs = nil
+        self:doAction("SetPowerLevel", nil, self.powerSlider:getCurrentValue() / 100)
+    end
+
+    if not self.powerSlider.dragInside and not self.pendingPowerLevelCommitMs then
         local powerLevel = batteryManager.getPowerLevel(self.itemObj) or 1
         self.powerSlider:setCurrentValue(powerLevel * 100, true)
     end
