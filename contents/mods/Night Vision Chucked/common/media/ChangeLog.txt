@@ -24,4 +24,6 @@ Currently only the mod supported is TTAJ1bl4's Night Vision Googles
        Thermals appear as pink outlines to zombies/players
 - Added: Sandbox for Battery-life, and Thermals working on Zombies
 - Fix: Battery duplication
+
+B41: Remains the same, but the hard-requirement for eris' has been lifted. All credit remains, but the mod should be able to function without the original.
 [ ------ ]
