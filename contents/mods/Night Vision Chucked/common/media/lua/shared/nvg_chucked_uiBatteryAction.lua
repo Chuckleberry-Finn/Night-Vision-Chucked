@@ -15,10 +15,14 @@ end
 
 
 function nightVisionChucked_uiBatteryAction:perform()
+    ISBaseTimedAction.perform(self)
+end
+
+function nightVisionChucked_uiBatteryAction:complete()
     if self.doAction then
         self["perform"..self.doAction](self)
     end
-    ISBaseTimedAction.perform(self)
+    return true
 end
 
 

@@ -10,6 +10,7 @@ local inventoryTooltip = require "nvg_chucked_inventoryTooltip.lua"
 local nvLight = require "nvg_chucked_light.lua"
 local thermal = require "nvg_chucked_thermal.lua"
 local compat = require "nvg_chucked_crossModCompat.lua"
+local modOptions = require "nvg_chucked_modOptions.lua"
 
 local nvg = {
     batteryManagers = {},
@@ -133,15 +134,34 @@ function ISClothingExtraAction:complete()
     local window = nightVisionChucked_deviceWindow.instances[playerNum]
     local windowTrackingOldItem = window and window.itemObj == oldItem
 
+    local oldWasBatteryCapable = oldItem and appliedNVGChuckedTypes[oldItem:getFullType()]
+    local savedBattery, savedBatteryLevel, savedPowerLevel, savedInitialised
+    if oldWasBatteryCapable then
+        savedBattery = oldItem:getModData()["uiBattery_battery"]
+        savedBatteryLevel = oldItem:getModData()["uiBattery_batteryLevel"]
+        savedPowerLevel = oldItem:getModData()["uiBattery_powerLevel"]
+        savedInitialised = oldItem:getModData()["uiBattery_initialised"]
+    end
+
     ISClothingExtraAction_complete(self)
 
-    if not autoActivate and not windowTrackingOldItem then return end
+    if not oldWasBatteryCapable and not autoActivate and not windowTrackingOldItem then return end
 
     local wornItems = self.character:getWornItems()
     local activated = false
+    local restored = false
     for i = 1, wornItems:size() do
         local item = wornItems:getItemByIndex(i - 1)
         if item and appliedNVGChuckedTypes[item:getFullType()] and nvgCore.isWearing(nil, self.character, item) then
+
+            if oldWasBatteryCapable and not restored then
+                restored = true
+                if savedInitialised then item:getModData()["uiBattery_initialised"] = savedInitialised end
+                if savedBattery ~= nil then item:getModData()["uiBattery_battery"] = savedBattery end
+                if savedBatteryLevel ~= nil then item:getModData()["uiBattery_batteryLevel"] = savedBatteryLevel end
+                if savedPowerLevel ~= nil then item:getModData()["uiBattery_powerLevel"] = savedPowerLevel end
+                batteryManager.refreshWeight(item)
+            end
 
             if windowTrackingOldItem then
                 window:setItem(item)
@@ -234,7 +254,7 @@ function nvg.onKeyPressed(key)
         return
     end
 
-    if key == getCore():getKey("Equip/Turn On/Off Light Source") then
+    if key == modOptions.getToggleKey() then
         local wornItems = playerObj:getWornItems()
 
         for i = 1, wornItems:size() do

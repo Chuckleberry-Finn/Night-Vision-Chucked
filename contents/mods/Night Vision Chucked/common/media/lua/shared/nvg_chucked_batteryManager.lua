@@ -77,7 +77,8 @@ function batteryManager.addBattery(itemObj, plObj, batteryItem)
     itemObj:getModData()["uiBattery_battery"] = true
     itemObj:getModData()["uiBattery_batteryLevel"] = batteryItem:getCurrentUsesFloat()
     batteryManager.refreshWeight(itemObj, batteryItem:getWeight())
-    plObj:getInventory():DoRemoveItem(batteryItem)
+    plObj:getInventory():Remove(batteryItem)
+    sendRemoveItemFromContainer(plObj:getInventory(), batteryItem)
 end
 
 
@@ -85,6 +86,7 @@ function batteryManager.removeBattery(itemObj, plObj)
     local batteryObj = instanceItem(batteryManager.batteryItemType)
     batteryObj:setUsedDelta(itemObj:getModData()["uiBattery_batteryLevel"])
     plObj:getInventory():AddItem(batteryObj)
+    sendAddItemToContainer(plObj:getInventory(), batteryObj)
     itemObj:getModData()["uiBattery_battery"] = false
     itemObj:getModData()["uiBattery_batteryLevel"] = 0
     batteryManager.refreshWeight(itemObj)

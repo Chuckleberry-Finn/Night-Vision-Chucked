@@ -27,3 +27,9 @@ Currently only the mod supported is TTAJ1bl4's Night Vision Googles
 
 B41: Remains the same, but the hard-requirement for eris' has been lifted. All credit remains, but the mod should be able to function without the original.
 [ ------ ]
+
+[ 9/1/26 - HOTFIX 1 ]
+- Fix: A few networking actions related to batteries.
+- Add: Key Input for NVG Toggle in Mod-Options
+- Tweak: Thermal interval lowered to 15ms, and upped range to 45
+[ ------ ]

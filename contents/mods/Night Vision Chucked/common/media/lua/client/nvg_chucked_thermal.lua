@@ -1,8 +1,8 @@
 local thermal = {}
 
 thermal.enabled = false
-thermal.scanIntervalMs = 200
-thermal.scanRadius = 30
+thermal.scanIntervalMs = 15
+thermal.scanRadius = 45
 thermal.outlineR = 1.0
 thermal.outlineG = 0.0
 thermal.outlineB = 0.6
