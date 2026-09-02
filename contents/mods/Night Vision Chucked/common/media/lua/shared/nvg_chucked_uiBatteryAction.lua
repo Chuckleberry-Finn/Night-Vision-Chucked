@@ -15,6 +15,9 @@ end
 
 
 function nightVisionChucked_uiBatteryAction:perform()
+    if self.doAction then
+        self["perform"..self.doAction](self)
+    end
     ISBaseTimedAction.perform(self)
 end
 

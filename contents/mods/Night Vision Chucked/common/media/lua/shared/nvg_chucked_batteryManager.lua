@@ -45,6 +45,7 @@ end
 
 function batteryManager.setPowerLevel(itemObj, powerLevel)
     itemObj:getModData()["uiBattery_powerLevel"] = powerLevel
+    itemObj:syncItemFields()
 end
 
 
@@ -62,6 +63,7 @@ function batteryManager.activate(itemObj)
     if not itemObj:getModData()["uiBattery_active"] then
         itemObj:getModData()["uiBattery_active"] = true
         itemObj:getModData()["uiBattery_activeTime"] = getGameTime():getWorldAgeHours()
+        itemObj:syncItemFields()
     end
 end
 
@@ -69,6 +71,7 @@ end
 function batteryManager.deactivate(itemObj)
     if itemObj:getModData()["uiBattery_active"] == true then
         itemObj:getModData()["uiBattery_active"] = false
+        itemObj:syncItemFields()
     end
 end
 
@@ -77,6 +80,7 @@ function batteryManager.addBattery(itemObj, plObj, batteryItem)
     itemObj:getModData()["uiBattery_battery"] = true
     itemObj:getModData()["uiBattery_batteryLevel"] = batteryItem:getCurrentUsesFloat()
     batteryManager.refreshWeight(itemObj, batteryItem:getWeight())
+    itemObj:syncItemFields()
     plObj:getInventory():Remove(batteryItem)
     sendRemoveItemFromContainer(plObj:getInventory(), batteryItem)
 end
@@ -90,6 +94,7 @@ function batteryManager.removeBattery(itemObj, plObj)
     itemObj:getModData()["uiBattery_battery"] = false
     itemObj:getModData()["uiBattery_batteryLevel"] = 0
     batteryManager.refreshWeight(itemObj)
+    itemObj:syncItemFields()
     batteryManager.deactivate(itemObj)
 end
 
@@ -104,8 +109,10 @@ function batteryManager.initialise(itemObj)
         itemObj:getModData()["uiBattery_batteryLevel"] = (hadBattery and 1) or (hasBattery and (ZombRandBetween(0, 10) / 10)) or 0
         itemObj:getModData()["uiBattery_powerLevel"] = 1
         itemObj:getModData()["uiBattery_initialised"] = true
+        itemObj:syncItemFields()
     elseif batteryManager.hasBattery(itemObj) and type(itemObj:getModData()["uiBattery_batteryLevel"]) ~= "number" then
         itemObj:getModData()["uiBattery_batteryLevel"] = ZombRandBetween(0, 10) / 10
+        itemObj:syncItemFields()
     end
     batteryManager.refreshWeight(itemObj)
 end
@@ -172,6 +179,7 @@ function batteryManager.tick()
         end
     end
 end
+
 
 
 

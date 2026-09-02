@@ -67,6 +67,34 @@ function nvgCore.isWearing(_, plObj, itemObj)
 end
 
 
+function nvgCore.findActivatableExtra(item)
+    if not item:IsClothing() then return nil end
+    local extraList = item:getClothingItemExtra()
+    if not extraList then return nil end
+
+    local itemModule = item:getModule()
+    for i = 0, extraList:size() - 1 do
+        local moduleDotType = itemModule .. "." .. extraList:get(i)
+        if appliedNVGActivatableTypes[moduleDotType] then
+            return moduleDotType
+        end
+    end
+    return nil
+end
+
+
+function nvgCore.flipAndActivate(plObj, item)
+    if isServer() then return false end
+    local targetType = nvgCore.findActivatableExtra(item)
+    if not targetType then return false end
+
+    local action = ISClothingExtraAction:new(plObj, item, targetType)
+    action.nvgAutoActivate = true
+    ISTimedActionQueue.add(action)
+    return true
+end
+
+
 function nvgCore.isWielding(_, plObj, itemObj)
     local weapon = plObj:getPrimaryHandItem()
     if not weapon or weapon:getCategory() ~= "Weapon" or not weapon:isRanged() then

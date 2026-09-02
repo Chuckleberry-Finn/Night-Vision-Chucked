@@ -33,3 +33,10 @@ B41: Remains the same, but the hard-requirement for eris' has been lifted. All c
 - Add: Key Input for NVG Toggle in Mod-Options
 - Tweak: Thermal interval lowered to 15ms, and upped range to 45
 [ ------ ]
+
+[ 9/2/26 ]
+Fix: Issues with MP interactions.
+Add: Indoor/Outdoor Light Handling.
+
+Pending Fix: UI Closes when NVG are adjusted UP/DOWN.
+[ ------ ]

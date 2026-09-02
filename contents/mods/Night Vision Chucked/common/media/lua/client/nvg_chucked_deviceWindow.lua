@@ -113,15 +113,12 @@ end
 
 
 function nightVisionChucked_deviceWindow:onToggle()
-    if not self.itemObj then return end
-
-    if not nvgCore.isWearing(nil, self.player, self.itemObj) then
-        nightVisionChucked_wearAndActivate(self.player, self.itemObj)
+    if not self.itemObj then
         return
     end
 
     if not appliedNVGActivatableTypes[self.itemObj:getFullType()] then
-        nightVisionChucked_flipAndActivate(self.player, self.itemObj)
+        nvgCore.flipAndActivate(self.player, self.itemObj)
         return
     end
 
@@ -164,19 +161,27 @@ function nightVisionChucked_deviceWindow:onPowerLevelChange(_newValue)
 end
 
 
-function nightVisionChucked_deviceWindow:update()
-    ISCollapsableWindow.update(self)
-    if not self.itemObj then return end
-
-    local stillAccessible = nvgCore.isValid(nil, self.player, self.itemObj) or nvgCore.isInPlayerInventory(nil, self.player, self.itemObj)
-    if not stillAccessible then
-        self:close()
-        return
-    end
-
+function nightVisionChucked_deviceWindow:updateActive()
     local isActive = batteryManager.updateActiveState(self.itemObj, self.player)
     self.led:setLedIsOn(isActive)
     self.toggleButton:setTitle(isActive and getText("ContextMenu_Turn_Off") or getText("ContextMenu_Turn_On"))
+end
+
+
+function nightVisionChucked_deviceWindow:update()
+    ISCollapsableWindow.update(self)
+
+    if not self.itemObj then return end
+
+    if not self.swapInProgress then
+        local stillAccessible = nvgCore.isValid(nil, self.player, self.itemObj) or nvgCore.isInPlayerInventory(nil, self.player, self.itemObj)
+        if not stillAccessible then
+            self:close()
+            return
+        end
+    end
+
+    self:updateActive()
 
     if batteryManager.hasBattery(self.itemObj) then
         self.batteryBox:setStoredItemFake(self.batteryTex)
@@ -208,5 +213,7 @@ function nightVisionChucked_deviceWindow:new(x, y, width, height, player)
     o.playerNum = player:getPlayerNum()
     o.batteryTex = getTexture("Item_Battery")
     o.resizable = false
+    o.swapInProgress = false
+    nightVisionChucked_deviceWindow.instance = o
     return o
 end

@@ -2,6 +2,7 @@ version=1
 id=2842179206
 title=Night Vision Chucked
 description=[h3]A continuation of eris' Night Vision mod, as well as framework and API.[/h3]
+description=[b]This mod does not have its own NV-goggles, you will need a supported mod, or a mod that utilizes this framework.[/b]
 description=
 description=[url=https://ko-fi.com/chuckleberryfinn][img]https://raw.githubusercontent.com/ChuckTheSheep/chuckImages/main/kofi.png[/img][/url][url=https://discord.gg/SReMnbV4V7][img]https://raw.githubusercontent.com/Chuckleberry-Finn/chuckImages/main/PZmodCommBanner3.png[/img][/url]
 description=

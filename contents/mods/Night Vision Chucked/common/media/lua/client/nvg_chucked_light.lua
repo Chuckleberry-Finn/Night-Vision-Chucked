@@ -43,7 +43,7 @@ function nvLight.update(plObj, powerLevel, radius, brightness)
 
     local dx = plObj:getForwardDirectionX()
     local dy = plObj:getForwardDirectionY()
-    local shift = activeRadius / 3
+    local shift = square:isOutside() and (activeRadius / 3) or 0
 
     local lx = math.floor(square:getX() + dx * shift + 0.5)
     local ly = math.floor(square:getY() + dy * shift + 0.5)
