@@ -1,13 +1,13 @@
 require "TimedActions/ISClothingExtraAction"
 local batteryManager = require "nvg_chucked_batteryManager.lua"
-local nvg = require "nvg_chucked_nvg.lua"
+local function getNVG() return require "nvg_chucked_nvg.lua" end
 local nvgCore = require "nvg_chucked_core.lua"
 
 local function deactivatedAndSetPendingReactivate(item, character)
     if item and appliedNVGActivatableTypes[item:getFullType()] and nvgCore.isActive(nil, character) then
         item:getModData()["uiBattery_reactivatePending"] = true
         batteryManager.deactivate(item)
-        if not isServer() then nvg.onDeactivate(nil, character, item) end
+        if not isServer() then getNVG().onDeactivate(nil, character, item) end
     end
 end
 
@@ -31,6 +31,7 @@ function ISWearClothing:complete()
         if appliedNVGActivatableTypes[item:getFullType()] then
 
             if not isServer() then
+                local nvg = getNVG()
                 local itemID = nvgCore.getItemID(item)
                 if not nvg.batteryManagers[itemID] then nvg.initialiseNVG(itemID, self.character, item) end
                 local itemBatteryManager = nvg.batteryManagers[itemID]
@@ -52,8 +53,10 @@ end
 local ISClothingExtraAction_createItemNew = ISClothingExtraAction.createItemNew
 function ISClothingExtraAction:createItemNew(item, newItem)
     local itemNew = ISClothingExtraAction_createItemNew(self, item, newItem)
-    self.nvc_newItem = itemNew
-    if not isServer() then nvg.openDeviceOptions(newItem, self.character) end
+    if self.character then
+        self.nvc_newItem = itemNew
+        if not isServer() then getNVG().openDeviceOptions(newItem, self.character) end
+    end
     return itemNew
 end
 
@@ -94,6 +97,7 @@ function ISClothingExtraAction:complete()
     if shouldActivate and appliedNVGActivatableTypes[newItem:getFullType()] then
         local itemID = nvgCore.getItemID(newItem)
         if not isServer() then
+            local nvg = getNVG()
 
             nvg.openDeviceOptions(newItem, self.character)
 

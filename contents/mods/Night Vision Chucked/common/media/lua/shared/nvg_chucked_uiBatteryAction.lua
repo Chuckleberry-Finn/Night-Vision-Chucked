@@ -15,9 +15,6 @@ end
 
 
 function nightVisionChucked_uiBatteryAction:perform()
-    if self.doAction then
-        self["perform"..self.doAction](self)
-    end
     ISBaseTimedAction.perform(self)
 end
 
@@ -97,15 +94,15 @@ function nightVisionChucked_uiBatteryAction:update()
 end
 
 
-function nightVisionChucked_uiBatteryAction:new(_plObj, _itemObj, _doAction, _itemObj2, _powerLevel)
+function nightVisionChucked_uiBatteryAction:new(character, itemObj, doAction, itemObj2, powerLevel)
     local o = {}
     setmetatable(o, self)
     self.__index = self
-    o.character = _plObj
-    o.itemObj = _itemObj
-    o.doAction = _doAction
-    o.itemObj2 = _itemObj2
-    o.powerLevel = _powerLevel
+    o.character = character
+    o.itemObj = itemObj
+    o.doAction = doAction
+    o.itemObj2 = itemObj2
+    o.powerLevel = powerLevel
     o.stopOnWalk = false
     o.stopOnRun = true
     o.maxTime = 30

@@ -40,3 +40,9 @@ Add: Indoor/Outdoor Light Handling.
 
 Pending Fix: UI Closes when NVG are adjusted UP/DOWN.
 [ ------ ]
+
+[ 11/10/26 ]
+- Fix: Battery actions being rejected by the server in MP.
+- Fix: Battery actions running twice in SP, changes are now only applied once on the server/host.
+- Fix: Error when NVG are spawned in as loot, or when adjusted UP/DOWN.
+[ ------ ]
