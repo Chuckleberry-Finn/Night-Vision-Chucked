@@ -4,6 +4,7 @@ Events.OnResolutionChange.Add(nvg.updateScreenBounds)
 
 Events.OnGameStart.Add(nvg.init)
 Events.OnPlayerUpdate.Add(nvg.aimingWithNVGScope)
+Events.OnKeyStartPressed.Add(nvg.onKeyStartPressed)
 Events.OnKeyPressed.Add(nvg.onKeyPressed)
 
 Events.OnCreatePlayer.Add(nvg.onCreatePlayer)

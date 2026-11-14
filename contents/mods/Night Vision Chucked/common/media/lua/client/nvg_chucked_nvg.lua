@@ -105,6 +105,13 @@ function nvg.onDeactivate(_, _plObj, _itemObj, _manager)
 end
 
 
+function nvg.onKeyStartPressed(key)
+    if key ~= modOptions.getToggleKey() then return end
+    nvg.toggleKeyPressedMs = getTimestampMs()
+    nvg.toggleKeyRadialWasVisible = getPlayerRadialMenu(0):isReallyVisible()
+end
+
+
 function nvg.onKeyPressed(key)
     local playerObj = getSpecificPlayer(0)
     if not playerObj then
@@ -112,6 +119,13 @@ function nvg.onKeyPressed(key)
     end
 
     if key == modOptions.getToggleKey() then
+
+        if getCore():isKey(KeybindId.LIGHT_SOURCE, key) then
+            local pressedMs = nvg.toggleKeyPressedMs
+            nvg.toggleKeyPressedMs = nil
+            if not pressedMs or nvg.toggleKeyRadialWasVisible or getTimestampMs() - pressedMs >= 500 then return end
+        end
+
         local wornItems = playerObj:getWornItems()
 
         for i = 1, wornItems:size() do

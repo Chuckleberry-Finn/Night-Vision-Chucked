@@ -45,4 +45,10 @@ Pending Fix: UI Closes when NVG are adjusted UP/DOWN.
 - Fix: Battery actions being rejected by the server in MP.
 - Fix: Battery actions running twice in SP, changes are now only applied once on the server/host.
 - Fix: Error when NVG are spawned in as loot, or when adjusted UP/DOWN.
+- Fix: Device Options window opening when adjusting non-NVG clothing (watches, hoods, etc).
+[ ------ ]
+
+[ 11/13/26 ]
+- Add: Device Options to the light source radial menu (hold F).
+       Includes Turn On/Off, Add/Remove Battery (with charge %), and UP/DOWN where applicable.
 [ ------ ]

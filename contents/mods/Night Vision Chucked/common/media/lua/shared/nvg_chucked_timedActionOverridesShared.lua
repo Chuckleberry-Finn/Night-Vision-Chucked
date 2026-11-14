@@ -1,6 +1,8 @@
 require "TimedActions/ISClothingExtraAction"
 local batteryManager = require "nvg_chucked_batteryManager.lua"
-local function getNVG() return require "nvg_chucked_nvg.lua" end
+local function getNVG()
+    return require "nvg_chucked_nvg.lua"
+end
 local nvgCore = require "nvg_chucked_core.lua"
 
 local function deactivatedAndSetPendingReactivate(item, character)
@@ -55,7 +57,7 @@ function ISClothingExtraAction:createItemNew(item, newItem)
     local itemNew = ISClothingExtraAction_createItemNew(self, item, newItem)
     if self.character then
         self.nvc_newItem = itemNew
-        if not isServer() then getNVG().openDeviceOptions(newItem, self.character) end
+        if not isServer() and appliedNVGChuckedTypes[newItem:getFullType()] then getNVG().openDeviceOptions(newItem, self.character) end
     end
     return itemNew
 end
