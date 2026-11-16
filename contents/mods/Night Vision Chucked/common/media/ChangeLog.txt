@@ -48,7 +48,8 @@ Pending Fix: UI Closes when NVG are adjusted UP/DOWN.
 - Fix: Device Options window opening when adjusting non-NVG clothing (watches, hoods, etc).
 [ ------ ]
 
-[ 11/13/26 ]
+[ 11/16/26 ]
 - Add: Device Options to the light source radial menu (hold F).
        Includes Turn On/Off, Add/Remove Battery (with charge %), and UP/DOWN where applicable.
+- Fix: NVG failing to turn on in MP, the server was not registering NVG types.
 [ ------ ]

@@ -13,3 +13,4 @@ end
 
 local nvgCore = require "nvg_chucked_core.lua"
 Events.OnGameStart.Add(nvgCore.getNVGTypes)
+Events.OnServerStarted.Add(nvgCore.getNVGTypes)
