@@ -42,6 +42,7 @@ end
 
 
 function nightVisionChucked_deviceWindow:doAction(_doAction, _itemObj2, _powerLevel)
+    if _itemObj2 then ISInventoryPaneContextMenu.transferIfNeeded(self.player, _itemObj2) end
     local action = nightVisionChucked_uiBatteryAction:new(self.player, self.itemObj, _doAction, _itemObj2, _powerLevel)
     ISTimedActionQueue.add(action)
 end

@@ -24,7 +24,7 @@ end
 function radialMenu.getBatteries(plObj)
     local batteries = {}
     local seenPercent = {}
-    local items = plObj:getInventory():getItemsFromFullType("Base.Battery")
+    local items = plObj:getInventory():getItemsFromFullType("Base.Battery", true)
     for i = 1, items:size() do
         local battery = items:get(i - 1)
         local percentText = radialMenu.getPercentText(battery:getCurrentUsesFloat())

@@ -43,7 +43,7 @@ end
 
 
 function nightVisionChucked_uiBatteryAction:isValidAddBattery()
-    return self.itemObj2 and not batteryManager.hasBattery(self.itemObj) or false
+    return self.itemObj2 and self.character:getInventory():contains(self.itemObj2) and not batteryManager.hasBattery(self.itemObj) or false
 end
 
 

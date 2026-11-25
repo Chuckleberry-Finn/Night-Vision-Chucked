@@ -53,3 +53,7 @@ Pending Fix: UI Closes when NVG are adjusted UP/DOWN.
        Includes Turn On/Off, Add/Remove Battery (with charge %), and UP/DOWN where applicable.
 - Fix: NVG failing to turn on in MP, the server was not registering NVG types.
 [ ------ ]
+
+[ 11/24/26 ]
+- Fix: Battery duplication when inserting a battery from a bag/container, batteries are now moved into the main inventory first.
+[ ------ ]
